@@ -5,5 +5,9 @@ urlpatterns = [
     path('register', views.register),
     path('my_login', views.my_login),
     path('', views.home),
-    path('create-task', views.createTask),
+    path('create-task', views.createTask, name="create-task"),
+    path('view-tasks', views.viewTasks, name="view-tasks"),
+    path('update-task/<str:pk>/', views.updateTask, name="update-task"),
+    path('delete-task/<str:pk>/', views.deleteTask, name="delete-task"),
+
 ]

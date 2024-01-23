@@ -3,11 +3,8 @@
 <h2> This is our homepage!</h2>
 
 
-    <p> {{task.id}}</p>
+<a href="{% url 'create-task' %}"> Create a task</a>
 
-    <p> {{task.title}}</p>
+<br> <br>
 
-    <p> {{task.description}}</p>
-
-    <br>
-
+<a href="{% url 'view-tasks' %}"> view tasks</a>
