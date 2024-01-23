@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Task
 from django.http import HttpResponse
-from .forms import TaskForm
+from .forms import TaskForm, CreateUserForm
 
 
 def home(request):
@@ -51,5 +51,16 @@ def deleteTask(request, pk):
     if request.method == "POST":
         task.delete()
         return redirect('view-tasks')
-    context = {'object':task}
+    context = {'object': task}
     return render(request, 'delete-task.html', context=context)
+
+
+def register(request):
+    form = CreateUserForm()
+    if request.method == "POST":
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("The user is registered!")
+    context = {'form': form}
+    return render(request, 'register.html', context=context)
