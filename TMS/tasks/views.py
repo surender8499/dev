@@ -4,6 +4,9 @@ from django.http import HttpResponse
 from .forms import TaskForm, CreateUserForm, LoginForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+
+
 def home(request):
     return render(request, 'index.html')
 
@@ -61,6 +64,7 @@ def register(request):
     context = {'form': form}
     return render(request, 'register.html', context=context)
 
+
 def my_login(request):
     form = LoginForm
     if request.method == "POST":
@@ -76,8 +80,11 @@ def my_login(request):
     context = {'form': form}
     return render(request, 'my-login.html', context=context)
 
+
+@login_required(login_url='my_login')
 def dashboard(request):
     return render(request, 'dashboard.html')
+
 
 def user_logout(request):
     auth.logout(request)
