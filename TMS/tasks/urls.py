@@ -5,4 +5,5 @@ urlpatterns = [
     path('register', views.register),
     path('my_login', views.my_login),
     path('', views.home),
+    path('create-task', views.createTask),
 ]

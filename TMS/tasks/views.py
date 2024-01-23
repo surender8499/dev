@@ -1,26 +1,28 @@
 from django.shortcuts import render, redirect
 from .models import Task
 from django.http import HttpResponse
+from .forms import TaskForm
 
 
-# from .forms import TaskForm
-#
-#
 def home(request):
-    return render(request, 'index.html')
+    qs = Task.objects.get(id=2)
+    context = {'task': qs}
+    return render(request, 'index.html', context=context)
 
 
 def register(request):
-    return HttpResponse('This is registration page!')
-
-    # return render(request, 'register.html')
+    return render(request, 'register.html')
 
 
 def my_login(request):
-    return HttpResponse('This is the login page!')
-    # return render(request, 'my-login.html')
-#
-#
+    return render(request, 'my-login.html')
+
+
+def createTask(request):
+    form = TaskForm()
+    context = {'form': form}
+    return render(request, 'task-form.html', context=context)
+
 # def createTask(request):
 #     form = TaskForm()
 #     if request.method == 'POST':
