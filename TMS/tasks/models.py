@@ -9,6 +9,6 @@ class Task(models.Model):
 
     status = models.CharField(max_length=25)
 
-    due_date = models.DateField()
+    due_date = models.DateField(null=True, blank=True)
 
     user = models.ForeignKey(User, max_length=10, on_delete=models.CASCADE, null=True)
