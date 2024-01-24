@@ -1,57 +1,14 @@
 from django.shortcuts import render, redirect
-from .models import Task
 from django.http import HttpResponse
-from .forms import TaskForm, CreateUserForm, LoginForm
+from .forms import CreateUserForm, LoginForm, CreateTaskForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from .models import Task
 
 
 def home(request):
     return render(request, 'index.html')
-
-
-def register(request):
-    return render(request, 'register.html')
-
-
-def createTask(request):
-    form = TaskForm()
-    if request.method == "POST":
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('view-tasks')
-    context = {'form': form}
-
-    return render(request, 'create-task.html', context=context)
-
-
-def viewTasks(request):
-    tasks = Task.objects.all()
-    context = {'tasks': tasks}
-    return render(request, 'view-tasks.html', context=context)
-
-
-def updateTask(request, pk):
-    task = Task.objects.get(id=pk)
-    form = TaskForm(instance=task)
-    if request.method == "POST":
-        form = TaskForm(request.POST, instance=task)
-        if form.is_valid():
-            form.save()
-            return redirect('view-tasks')
-    context = {'form': form}
-    return render(request, 'update-task.html', context=context)
-
-
-def deleteTask(request, pk):
-    task = Task.objects.get(id=pk)
-    if request.method == "POST":
-        task.delete()
-        return redirect('view-tasks')
-    context = {'object': task}
-    return render(request, 'delete-task.html', context=context)
 
 
 def register(request):
@@ -60,7 +17,7 @@ def register(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponse("The user is registered!")
+            return redirect("dashboard")
     context = {'form': form}
     return render(request, 'register.html', context=context)
 
@@ -83,8 +40,50 @@ def my_login(request):
 
 @login_required(login_url='my_login')
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    return render(request, 'profile/dashboard.html')
 
+
+@login_required(login_url='my_login')
+def createTask(request):
+    form = CreateTaskForm()
+    if request.method == "POST":
+        form = CreateTaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
+            return redirect('view-tasks')
+    context = {'form': form}
+    return render(request, 'profile/create-task.html', context=context)
+
+
+@login_required(login_url='my_login')
+def viewTask(request):
+    current_user = request.user.id
+    task = Task.objects.all().filter(user=current_user)
+    context = {'task': task}
+    return render(request, 'profile/view-tasks.html', context=context)
+
+
+@login_required(login_url='my_login')
+def updateTask(request, pk):
+    task = Task.objects.get(id=pk)
+    form = CreateTaskForm(instance=task)
+    if request.method == 'POST':
+        form = CreateTaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect('view-tasks')
+    context = {'form': form}
+    return render(request, 'profile/update-task.html', context=context)
+
+
+def deleteTask(request, pk):
+    task = Task.objects.get(id=pk)
+    if request.method == 'POST':
+        task.delete()
+        return redirect('view-tasks')
+    return render(request, 'profile/delete-task.html')
 
 def user_logout(request):
     auth.logout(request)
