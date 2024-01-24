@@ -17,8 +17,8 @@ Run the Application python manage.py runserver
 Visit http://127.0.0.1:8000/ in your web browser.
 
 Usage
-Access the Homepage : http://127.0.0.1:8000/
-Access the register page : http://127.0.0.1:8000/register
+Access the Homepage : http://127.0.0.1:8000/    
+Access the register page : http://127.0.0.1:8000/register   
 Access the dashboard : http://127.0.0.1:8000/dashboard
 Access the Login Page : http://127.0.0.1:8000/my-login
 Access the task list: http://127.0.0.1:8000/view-tasks
